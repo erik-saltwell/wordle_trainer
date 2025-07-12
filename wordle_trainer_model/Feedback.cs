@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System.Xml.Serialization;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace wordle_trainer_model
 {
@@ -29,8 +27,7 @@ namespace wordle_trainer_model
 
         public WordFeedback(List<LetterFeedback> letters)
         {
-            this.Letters = new();
-            this.Letters.AddRange(letters);  
+            this.Letters = [.. letters];
         }
 
         public WordFeedback(WordFeedback other)
@@ -38,11 +35,23 @@ namespace wordle_trainer_model
             this.Letters = new List<LetterFeedback>(other.Letters);
         }
 
+        public WordFeedback(string guess, string feedback)
+        {
+            if (guess.Length != feedback.Length)
+                throw new InvalidOperationException();
+            this.Letters = new();
+            for (int i = 0; i < feedback.Length; i++)
+            {
+                Feedback f = Parse(feedback[i]);
+                this.Letters.Add(new LetterFeedback(i, guess[i], f));
+            }
+        }
+
         public string DebugString
         {
             get
             {
-                return string.Concat(Letters.Select(x => x.character)) + " | "+FeedbackString;
+                return GuessString + " | " + FeedbackString;
             }
         }
 
@@ -62,7 +71,7 @@ namespace wordle_trainer_model
 
         public void RemoveByPosition(int index)
         {
-            Letters.RemoveAll(x => x.position == index);
+            _ = Letters.RemoveAll(x => x.position == index);
         }
 
         public bool HasPosition(int index)
@@ -70,44 +79,47 @@ namespace wordle_trainer_model
             return Letters.Any(x => x.position == index);
         }
 
-        public List<LetterFeedback> Letters { get; internal set; }  
-        public string FeedbackString => string.Concat(Letters.OrderBy(x=>x.position).Select(x => Convert.ToInt32(x.feedback).ToString()));
+        public List<LetterFeedback> Letters { get; internal set; }
+        public string FeedbackString => string.Concat(Letters.OrderBy(x => x.position).Select(x => Convert.ToInt32(x.feedback).ToString()));
+        public string GuessString => string.Concat(Letters.OrderBy(x => x.position).Select(x => x.character));
 
         public IEnumerable<LetterFeedback> GetLettersByFeedback(Feedback feedback) => Letters.Where(x => x.feedback == feedback);
 
         public static WordFeedback CreateFromSolution(string solution)
         {
-            List<LetterFeedback> letters = new List<LetterFeedback>();
+            List<LetterFeedback> letters = [];
             for (int i = 0; i < solution.Length; ++i)
             {
-                LetterFeedback letter = new LetterFeedback(i, solution[i], Feedback.RIGHT);
+                LetterFeedback letter = new(i, solution[i], Feedback.RIGHT);
                 letters.Add(letter);
             }
-            WordFeedback retVal = new WordFeedback(solution);
-            retVal.Letters = letters;
+            WordFeedback retVal = new(solution)
+            {
+                Letters = letters
+            };
             return retVal;
         }
 
         public static WordFeedback CreateFromGuessAndSolution(string guess, WordFeedback solution)
         {
             if (guess.Length != solution.Letters.Count) throw new InvalidOperationException();
-            WordFeedback working_solution = new WordFeedback(solution);
-            WordFeedback working_guess = new WordFeedback(guess);
-            List<LetterFeedback> final_feedback = new List<LetterFeedback>();
-            
+            WordFeedback working_solution = new(solution);
+            WordFeedback working_guess = new(guess);
+            List<LetterFeedback> final_feedback = [];
+
             //build list of positions that are left in our guess
             List<int> positions = working_guess.Letters.Select(x => x.position).ToList();
             //find all perfect matches and remove them from both working objects
             foreach (int position in positions)
             {
                 LetterFeedback guess_letter = working_guess.Letters.First(x => x.position == position);
-                LetterFeedback solution_letter = working_solution.Letters.First(x=>x.position == position);
-                if(solution_letter.character == guess_letter.character)
+                LetterFeedback solution_letter = working_solution.Letters.First(x => x.position == position);
+                if (solution_letter.character == guess_letter.character)
                 {
                     //its a match, so add feedback and remove from both lists as they were matched
                     final_feedback.Add(new LetterFeedback(position, solution_letter.character, Feedback.RIGHT));
                     working_solution.RemoveByPosition(position);
-                    working_guess.RemoveByPosition(position);  
+                    working_guess.RemoveByPosition(position);
                 }
             }
             //build list of positions that are left in our guess
@@ -116,7 +128,8 @@ namespace wordle_trainer_model
             foreach (int position in positions)
             {
                 LetterFeedback guess_letter = working_guess.Letters.First(x => x.position == position);
-                if(!working_solution.Letters.Any(x=>x.character == guess_letter.character)){
+                if (!working_solution.Letters.Any(x => x.character == guess_letter.character))
+                {
                     final_feedback.Add(new LetterFeedback(position, guess_letter.character, Feedback.WRONG_LETTER));
                     working_guess.RemoveByPosition(position);
                 }
@@ -125,11 +138,11 @@ namespace wordle_trainer_model
             //rebuild the list of positions that are left
             positions = working_guess.Letters.Select(x => x.position).ToList();
             //foreach position left in the guess, walk through the solution, and if you find the char anywhere, then add feedback of WRONG_SPACE, then remove from both lists.
-            foreach(int position in positions)
+            foreach (int position in positions)
             {
                 LetterFeedback guess_letter = working_guess.Letters.First(y => y.position == position);
                 LetterFeedback? solution_letter = working_solution.Letters.FirstOrDefault(x => x.character == guess_letter.character, null)!;
-                if(solution_letter is not null)
+                if (solution_letter is not null)
                 {
                     //we have a match, so set feedback to wrong_space and delete from guess and solution
                     final_feedback.Add(new LetterFeedback(position, guess_letter.character, Feedback.WRONG_SPACE));
@@ -151,9 +164,9 @@ namespace wordle_trainer_model
             if (Letters.Any(x => x.feedback == Feedback.UNKNOWN))
                 throw new NotImplementedException();
 
-            WordFeedback working_guess = new WordFeedback(guess);
-            Dictionary<char, int> wrong_space_characters = new();
-            HashSet<char> wrong_characters = new();
+            WordFeedback working_guess = new(guess);
+            Dictionary<char, int> wrong_space_characters = [];
+            HashSet<char> wrong_characters = [];
 
             // Process correct spots, removing them from characters that can be used in future steps
             foreach (LetterFeedback letter in this.GetLettersByFeedback(Feedback.RIGHT))
@@ -178,30 +191,47 @@ namespace wordle_trainer_model
                 {
                     LetterFeedback letter_to_remove = working_guess.Letters.FirstOrDefault(x => x.character == character)!;
                     if (letter_to_remove == null) return false;
-                    working_guess.Letters.Remove(letter_to_remove);
+                    _ = working_guess.Letters.Remove(letter_to_remove);
                 }
             }
 
-            foreach(LetterFeedback letter in this.GetLettersByFeedback(Feedback.WRONG_LETTER)){
-                if(working_guess.Letters.Any(x=>x.character == letter.character)) return false;
+            foreach (LetterFeedback letter in this.GetLettersByFeedback(Feedback.WRONG_LETTER))
+            {
+                if (working_guess.Letters.Any(x => x.character == letter.character)) return false;
             }
 
-            if(other_disallowed_chars is not null)
+            if (other_disallowed_chars is not null)
             {
-                foreach(char character in other_disallowed_chars)
+                foreach (char character in other_disallowed_chars)
                 {
-                    if(working_guess.Letters.Any(x=>x.character == character)) return false;
+                    if (working_guess.Letters.Any(x => x.character == character)) return false;
                 }
             }
 
             return true;
         }
+        private static Feedback Parse(char character)
+        {
+            switch (character)
+            {
+                case '0':
+                    return Feedback.WRONG_LETTER;
+                case '1':
+                    return Feedback.WRONG_SPACE;
+                case '2':
+                    return Feedback.RIGHT;
+                case '3':
+                    return Feedback.UNKNOWN;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
     }
-
+    /*
     public class State
     {
         private LetterFeedback[] _lastGuess = new LetterFeedback[5];
-        private HashSet<char> _wrongLetters = new HashSet<char>();
+        private HashSet<char> _wrongLetters = [];
 
         private State()
         { Reset(); }
@@ -215,5 +245,5 @@ namespace wordle_trainer_model
             }
         }
     }
+    */
 }
-;

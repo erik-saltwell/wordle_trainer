@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wordle_trainer_model", "wor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wordle_trainer_model_test", "wordle_trainer_model_test\wordle_trainer_model_test.csproj", "{C9087CD3-9F27-4250-B187-595FC98AD774}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "opening_builder", "opening_builder\opening_builder.csproj", "{4CAB7088-6D96-4520-A0E8-614695BF9681}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C9087CD3-9F27-4250-B187-595FC98AD774}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9087CD3-9F27-4250-B187-595FC98AD774}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9087CD3-9F27-4250-B187-595FC98AD774}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CAB7088-6D96-4520-A0E8-614695BF9681}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CAB7088-6D96-4520-A0E8-614695BF9681}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CAB7088-6D96-4520-A0E8-614695BF9681}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CAB7088-6D96-4520-A0E8-614695BF9681}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

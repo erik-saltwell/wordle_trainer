@@ -21,5 +21,19 @@
         {
             return ((double)new_solution_space.Count) / (double)(old_solution_space.Count);
         }
+
+        public static double ComputeShannonEntropy(ICollection<string> old_solution_space, IEnumerable<List<string>> new_solution_spaces)
+        {
+            double retVal = 0.0f;
+            foreach (ICollection<string> new_solution_space in new_solution_spaces)
+            {
+                double likelyhood = ComputeLikelihood(old_solution_space, new_solution_space);
+                double bits_gained = ComputyGainedInformation(old_solution_space, new_solution_space);
+                double entropy_piece = likelyhood * bits_gained;
+                retVal += entropy_piece;
+            }
+
+            return retVal;  
+        }
     }
 }

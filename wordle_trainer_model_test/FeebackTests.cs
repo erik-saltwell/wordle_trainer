@@ -48,6 +48,14 @@ namespace wordle_trainer_model_test
         }
 
         [TestMethod]
+        public void TestGuessString()
+        {
+            WordFeedback word = Create("abcde", "22222");
+            Assert.AreEqual("abcde", word.GuessString);
+
+        }
+
+        [TestMethod]
         public void TestFeedbackString()
         {
             TestFeedbackStringInternal("00000");
@@ -98,6 +106,26 @@ namespace wordle_trainer_model_test
         {
             TestSolutionInternal("abcde");
             TestSolutionInternal("aaaaa");
+        }
+
+        [TestMethod]
+        public void TestCreateFromGuessAndFeedback()
+        {
+            TestCreateFromGessAndFeedbackInternal("abcde", "00000");
+            TestCreateFromGessAndFeedbackInternal("ecabd", "01210");
+        }
+
+        private void TestCreateFromGessAndFeedbackInternal( string guess, string feedback)
+        {
+            WordFeedback expected = Create(guess, feedback);
+            WordFeedback actual = new WordFeedback(guess, feedback);
+            Assert.AreEqual(expected.Letters.Count, actual.Letters.Count);
+            for (int i = 0; i < expected.Letters.Count; i++)
+            {
+                Assert.AreEqual(expected.Letters[i].position, actual.Letters[i].position);
+                Assert.AreEqual(expected.Letters[i].character, actual.Letters[i].character);
+                Assert.AreEqual(expected.Letters[i].feedback, actual.Letters[i].feedback);
+            }
         }
 
         private void TestSolutionInternal(string solution)
