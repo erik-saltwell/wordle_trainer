@@ -58,6 +58,15 @@ namespace wordle_trainer_model_test
             TestFeedbackStringInternal("00210");
             TestFeedbackStringInternal("21212");
             TestFeedbackStringInternal("01202");
+            List<LetterFeedback> letters = new List<LetterFeedback>();
+            letters.Add(new LetterFeedback(2, 'c', Feedback.RIGHT));
+            letters.Add(new LetterFeedback(0, 'a', Feedback.WRONG_SPACE));
+            letters.Add(new LetterFeedback(1, 'b', Feedback.WRONG_SPACE));
+            letters.Add(new LetterFeedback(3, 'd', Feedback.WRONG_SPACE));
+            letters.Add(new LetterFeedback(4, 'e', Feedback.WRONG_SPACE));
+            WordFeedback f = new WordFeedback(letters);
+            string feedback_string = f.FeedbackString;
+            Assert.AreEqual("11211", feedback_string);
         }
 
         [TestMethod]
@@ -68,8 +77,52 @@ namespace wordle_trainer_model_test
             Assert.IsFalse(f.GuessCompliesWithFeedback("xbckd", "px"));
         }
 
+        [TestMethod]
+        public void TestCreateFeedbackFromGuessAndSolution()
+        {
+            TestCreateFeedbackInternal("place", "place", "22222");
+            TestCreateFeedbackInternal("place", "zzzzz", "00000");
+            TestCreateFeedbackInternal("place", "ecalp", "11211");
+            TestCreateFeedbackInternal("plate", "spitp", "01020");
+
+            TestCreateFeedbackInternal("xyyza", "lllyy", "00011");
+            TestCreateFeedbackInternal("xyyza", "yllyy", "10010");
+            TestCreateFeedbackInternal("xyyza", "lllyz", "00011");
+            TestCreateFeedbackInternal("xyyza", "ylyly", "10200");
+            TestCreateFeedbackInternal("xyyza", "lllly", "00001");
+            TestCreateFeedbackInternal("xyyzz", "lllyy", "00011");
+        }
+
+        [TestMethod]
+        public void TestCreateSolution()
+        {
+            TestSolutionInternal("abcde");
+            TestSolutionInternal("aaaaa");
+        }
+
+        private void TestSolutionInternal(string solution)
+        {
+            WordFeedback f = WordFeedback.CreateFromSolution(solution);
+            Assert.AreEqual(solution.Length, f.Letters.Count);
+            for (int i = 0; i < f.Letters.Count; i++)
+            {
+                Assert.AreEqual(f.Letters[i].character, solution[i]);
+                Assert.AreEqual(Feedback.RIGHT, f.Letters[i].feedback);
+                Assert.AreEqual(i, f.Letters[i].position);
+            }
+        }
+
+        private void TestCreateFeedbackInternal(string solution_text , string guess_text, string expected_feedback_string)
+        {
+            WordFeedback solution = WordFeedback.CreateFromSolution(solution_text);
+            WordFeedback temp = WordFeedback.CreateFromGuessAndSolution(guess_text, solution);
+            string feedback_string = temp.FeedbackString;
+            Assert.AreEqual(expected_feedback_string, feedback_string);
+        }
+
         private void TestFeedbackStringInternal(string feedback)
         {
+            List<Feedback> list = new List<Feedback>();
             WordFeedback f = Create("abcde", feedback);
             string output = f.FeedbackString;
             Assert.AreEqual(feedback, output);

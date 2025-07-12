@@ -1,4 +1,8 @@
-﻿namespace wordle_trainer_model
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Xml.Serialization;
+using System.Diagnostics;
+
+namespace wordle_trainer_model
 {
     public enum Feedback
     {
@@ -10,6 +14,7 @@
 
     public record LetterFeedback(int position, char character, Feedback feedback);
 
+    [DebuggerDisplay("{DebugString}")]
     public class WordFeedback
     {
         public WordFeedback(string guess)
@@ -22,10 +27,25 @@
             }
         }
 
+        public WordFeedback(List<LetterFeedback> letters)
+        {
+            this.Letters = new();
+            this.Letters.AddRange(letters);  
+        }
+
         public WordFeedback(WordFeedback other)
         {
             this.Letters = new List<LetterFeedback>(other.Letters);
         }
+
+        public string DebugString
+        {
+            get
+            {
+                return string.Concat(Letters.Select(x => x.character)) + " | "+FeedbackString;
+            }
+        }
+
 
         public IEnumerable<LetterFeedback> Find(char character)
         {
@@ -50,10 +70,81 @@
             return Letters.Any(x => x.position == index);
         }
 
-        public List<LetterFeedback> Letters { get; internal set; } 
-        public string FeedbackString => string.Concat(Letters.Select(x => Convert.ToInt32(x.feedback).ToString()));
+        public List<LetterFeedback> Letters { get; internal set; }  
+        public string FeedbackString => string.Concat(Letters.OrderBy(x=>x.position).Select(x => Convert.ToInt32(x.feedback).ToString()));
 
         public IEnumerable<LetterFeedback> GetLettersByFeedback(Feedback feedback) => Letters.Where(x => x.feedback == feedback);
+
+        public static WordFeedback CreateFromSolution(string solution)
+        {
+            List<LetterFeedback> letters = new List<LetterFeedback>();
+            for (int i = 0; i < solution.Length; ++i)
+            {
+                LetterFeedback letter = new LetterFeedback(i, solution[i], Feedback.RIGHT);
+                letters.Add(letter);
+            }
+            WordFeedback retVal = new WordFeedback(solution);
+            retVal.Letters = letters;
+            return retVal;
+        }
+
+        public static WordFeedback CreateFromGuessAndSolution(string guess, WordFeedback solution)
+        {
+            if (guess.Length != solution.Letters.Count) throw new InvalidOperationException();
+            WordFeedback working_solution = new WordFeedback(solution);
+            WordFeedback working_guess = new WordFeedback(guess);
+            List<LetterFeedback> final_feedback = new List<LetterFeedback>();
+            
+            //build list of positions that are left in our guess
+            List<int> positions = working_guess.Letters.Select(x => x.position).ToList();
+            //find all perfect matches and remove them from both working objects
+            foreach (int position in positions)
+            {
+                LetterFeedback guess_letter = working_guess.Letters.First(x => x.position == position);
+                LetterFeedback solution_letter = working_solution.Letters.First(x=>x.position == position);
+                if(solution_letter.character == guess_letter.character)
+                {
+                    //its a match, so add feedback and remove from both lists as they were matched
+                    final_feedback.Add(new LetterFeedback(position, solution_letter.character, Feedback.RIGHT));
+                    working_solution.RemoveByPosition(position);
+                    working_guess.RemoveByPosition(position);  
+                }
+            }
+            //build list of positions that are left in our guess
+            positions = working_guess.Letters.Select(x => x.position).ToList();
+            //find all characters in the guess that aren't in the solution at all, and add feedback that its the wrong letter, then remove ONLY from the guess (because its not in the solution)
+            foreach (int position in positions)
+            {
+                LetterFeedback guess_letter = working_guess.Letters.First(x => x.position == position);
+                if(!working_solution.Letters.Any(x=>x.character == guess_letter.character)){
+                    final_feedback.Add(new LetterFeedback(position, guess_letter.character, Feedback.WRONG_LETTER));
+                    working_guess.RemoveByPosition(position);
+                }
+            }
+
+            //rebuild the list of positions that are left
+            positions = working_guess.Letters.Select(x => x.position).ToList();
+            //foreach position left in the guess, walk through the solution, and if you find the char anywhere, then add feedback of WRONG_SPACE, then remove from both lists.
+            foreach(int position in positions)
+            {
+                LetterFeedback guess_letter = working_guess.Letters.First(y => y.position == position);
+                LetterFeedback? solution_letter = working_solution.Letters.FirstOrDefault(x => x.character == guess_letter.character, null)!;
+                if(solution_letter is not null)
+                {
+                    //we have a match, so set feedback to wrong_space and delete from guess and solution
+                    final_feedback.Add(new LetterFeedback(position, guess_letter.character, Feedback.WRONG_SPACE));
+                    working_guess.RemoveByPosition(guess_letter.position);
+                    working_solution.RemoveByPosition(solution_letter.position);
+                } else
+                {
+                    //no match, so set feedback to WRONG_LETTER and remove from guess.
+                    final_feedback.Add(new LetterFeedback(position, guess_letter.character, Feedback.WRONG_LETTER));
+                    working_guess.RemoveByPosition(position);
+                }
+            }
+            System.Diagnostics.Debug.Assert(final_feedback.Count == guess.Length);
+            return new WordFeedback(final_feedback);
+        }
 
         public bool GuessCompliesWithFeedback(string guess, IEnumerable<char>? other_disallowed_chars = null)
         {
