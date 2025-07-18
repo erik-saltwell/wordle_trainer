@@ -10,16 +10,24 @@ namespace opening_builder
     {
         public List<string> Solutions { get; set; } = new();
 
-        void Possible_Solutions() {
-            //AddOriginialSolutionsList();
-            AddTestSolutionsList();
+        public PossibleSolutions() {
+            AddOriginialSolutionsList(); 
         }
-        private void AddTestSolutionsList()
+
+        public PossibleSolutions(string[] items)
         {
-            Solutions.Add("place");
-            Solutions.Add("eclap");
-            Solutions.Add("zzzzz");
+            if (items.Length == 0)
+            {
+                AddOriginialSolutionsList();
+            } else
+            {
+                foreach (string item in items)
+                {
+                    Solutions.Add(item);
+                }
+            }
         }
+
 
         private void AddOriginialSolutionsList() { 
             Solutions.Add("abase");
@@ -1451,7 +1459,7 @@ namespace opening_builder
             Solutions.Add("plane");
             Solutions.Add("plank");
             Solutions.Add("plant");
-            Solutions.Add("plate");
+            //Solutions.Add("plate");
             Solutions.Add("plaza");
             Solutions.Add("plead");
             Solutions.Add("pleat");

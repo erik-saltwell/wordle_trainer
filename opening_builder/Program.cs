@@ -1,4 +1,5 @@
-﻿using wordle_trainer_model;
+﻿using System.Diagnostics;
+using wordle_trainer_model;
 
 namespace opening_builder
 {
@@ -9,7 +10,20 @@ namespace opening_builder
 
         static void Main(string[] args)
         {
+            //Test();
             ExecuteFullProgram();
+        }
+        private static void Test()
+        {
+            PossibleSolutions initial_possible_solutions = new PossibleSolutions(["xxxxx", "yyggg", "yyccc", "yybbb", "yyddd", "plate"]);
+            WordFeedback first_move_result = new WordFeedback("plate", "00000");
+            
+            List<string> possible_solutions = Solver.TrimSolutionSpaceForAnswer(first_move_result, initial_possible_solutions.Solutions);
+            
+            System.Diagnostics.Trace.WriteLine("Trimmed starting solutions: "+ string.Concat(possible_solutions.Select(x=>x + " ")));
+            string optimal_response = Solver.GetOptimalResponse(first_move_result, possible_solutions);
+            Console.WriteLine(optimal_response);
+            Console.ReadLine();
         }
 
         private static void ExecuteFullProgram()
@@ -20,9 +34,15 @@ namespace opening_builder
             {
                 WordFeedback first_move_result = new WordFeedback(_first_move, initial_feedback_string);
                 List<string> possible_solutions = Solver.TrimSolutionSpaceForAnswer(first_move_result, initial_possible_solutions.Solutions);
-
-                string optimal_response = Solver.GetOptimalResponse(first_move_result, possible_solutions);
-                _optimal_guesses.Add(first_move_result, optimal_response);
+                
+                if (possible_solutions.Count  == 0)
+                {
+                    Console.WriteLine($"{initial_feedback_string}=>EMPTY");
+                } else {
+                    string optimal_response = Solver.GetOptimalResponse(first_move_result, possible_solutions);
+                    _optimal_guesses.Add(first_move_result, optimal_response);
+                    Console.WriteLine($"{initial_feedback_string}=>{optimal_response}");
+                }
             }
 
             //write to file
@@ -33,6 +53,7 @@ namespace opening_builder
                     w.WriteLine(f.FeedbackString + "\t" + _optimal_guesses[f]);
                 }
             }
+            Console.ReadLine();
         }
 
         private static IEnumerable<string> GenerateAllPossibleSolutions(int length = 5)

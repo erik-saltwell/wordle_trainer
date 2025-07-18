@@ -23,10 +23,12 @@ namespace wordle_trainer_model
         public static string GetOptimalResponse(WordFeedback feedback, List<string> solution_space)
         {
             string result = string.Empty;
-            double best_entropy = 0.0f;
+            double best_entropy = double.MinValue;
             foreach (string guess in solution_space)
             {
-                double entropy = ComputeEntropy(guess, solution_space);
+                //System.Diagnostics.Trace.WriteLine("Guess: " + guess);
+                double entropy = ComputeEntropy(guess, solution_space.Where(x=>x != guess).ToList());
+                //System.Diagnostics.Trace.WriteLine($"{guess}=>{entropy}");
                 if (entropy > best_entropy)
                 {
                     best_entropy = entropy;
@@ -42,7 +44,7 @@ namespace wordle_trainer_model
             return entropy;
         }
 
-        internal static List<List<string>> DivideSolutionSpace(string solution, List<string> old_solution_space)
+        internal static List<List<string>> DivideSolutionSpace(string solution, IEnumerable<string> old_solution_space)
         {
             WordFeedback solution_feedback = WordFeedback.CreateFromSolution(solution);
             Dictionary<string, List<string>> divided_solution_space = new();
@@ -58,6 +60,21 @@ namespace wordle_trainer_model
             }
             List<List<string>> result = new();
             result.AddRange(divided_solution_space.Values);
+            /*if (System.Diagnostics.Debugger.IsAttached)
+            {
+                foreach(string key in divided_solution_space.Keys)
+                {
+                    StringBuilder bldr = new StringBuilder();
+                    bldr.Append(key);
+                    bldr.Append(" : ");
+                    foreach(string v in divided_solution_space[key]) { 
+                        bldr.Append(v);
+                        bldr.Append(' ');
+                    }
+                    System.Diagnostics.Debug.WriteLine(bldr.ToString());
+                }
+            }
+            */
             return result;
         }
     }
