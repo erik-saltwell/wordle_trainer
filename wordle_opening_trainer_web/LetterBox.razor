@@ -1,0 +1,35 @@
+﻿<div id="@CellID" class="@CssClass">@Letter</div>
+@code {
+    [Parameter] public int ColID { get; set; } = 0;
+    [Parameter] public int RowID { get; set; } = 0;
+    [Parameter] public string Letter { get; set; } = "";
+    [Parameter] public LetterResponseType Result { get; set; } = LetterResponseType.UNFILLED;
+
+    private string CellID => "cell_" + RowID.ToString() + "_" + ColID;
+
+    private string CssClass => new CssBuilder().Add("tile").Add(result_classname).ToString();
+
+    private string result_classname
+    {
+        get
+        {
+            switch (Result)
+            {
+                case LetterResponseType.UNFILLED:
+                    return "unfilled";
+                case LetterResponseType.UNSUBMITTED:
+                    return "unsubmitted";
+                case LetterResponseType.WRONG_LETTER:
+                    return "wrong_letter";
+                case LetterResponseType.WRONG_SPACE:
+                    return "wrong_space";
+                case LetterResponseType.RIGHT:
+                    return "right";
+                case LetterResponseType.UNUSED:
+                    return "unused";
+                default:
+                    return "unused";
+            }
+        }
+    }
+}

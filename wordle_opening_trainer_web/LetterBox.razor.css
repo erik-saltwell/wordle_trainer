@@ -1,0 +1,35 @@
+﻿.tile {
+    width: 62px;
+    height: 62px;
+    border: 2px solid #d3d6da;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #000000;
+    text-transform: uppercase;
+}
+
+    .tile.right {
+        background-color: #6aaa64;
+        border-color: #6aaa64;
+        color: #ffffff;
+    }
+
+    .tile.wrong_space {
+        background-color: #c9b458;
+        border-color: #c9b458;
+        color: #ffffff;
+    }
+
+    .tile.wrong_letter {
+        background-color: #787c7e;
+        border-color: #787c7e;
+        color: #ffffff;
+    }
+
+    .tile.unsubmitted {
+        border-color: #565758;
+    }
