@@ -12,6 +12,13 @@
     text-transform: uppercase;
 }
 
+    .tile.finalwrong {
+        --background-color: #AB6565;
+        --border-color: #AB6565;
+        border-color: #565758;
+        animation: flip 0.5s ease forwards;
+    }
+
     .tile.right {
         --background-color: #6aaa64;
         --border-color: #6aaa64;

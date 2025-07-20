@@ -185,7 +185,7 @@
         }
     }
 
-    private Task SubmitGuessAsync(string guess)
+    private async Task SubmitGuessAsync(string guess)
     {
         // TODO: Call your custom guess evaluation function
         Console.WriteLine($"User guessed: {guess}. Best Guess: {bestGuess}");
@@ -195,7 +195,10 @@
         else
             DoFailure();
 
-        return Task.CompletedTask;
+        StateHasChanged();
+        await Task.Delay(3500);
+        ResetToNewWord();
+
     }
 
     private void DoSuccess()
@@ -211,7 +214,8 @@
         Console.WriteLine("Found Failure!");
         for (int i = 5; i < 10; i++)
         {
-            LetterResponses[i] = LetterResponseType.WRONG_SPACE;
+            LetterValues[i] = bestGuess[i-5].ToString();
+            LetterResponses[i] = LetterResponseType.FINAL_WRONG;
         }
     }
 }

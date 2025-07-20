@@ -15,6 +15,7 @@
     { 
         get
         {
+            return "";
             if (!IsComplete) return "";
             switch (ColID)
             {
@@ -46,6 +47,8 @@
                     return "right";
                 case LetterResponseType.UNUSED:
                     return "unused";
+                case LetterResponseType.FINAL_WRONG:
+                    return "finalwrong";
                 default:
                     return "unused";
             }

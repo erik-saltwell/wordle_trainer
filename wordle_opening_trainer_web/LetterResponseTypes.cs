@@ -7,6 +7,7 @@
         UNSUBMITTED,
         WRONG_LETTER,
         WRONG_SPACE,
-        RIGHT
+        RIGHT,
+        FINAL_WRONG
     }
 }
