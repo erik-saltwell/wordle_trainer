@@ -1,6 +1,10 @@
 ﻿@page "/"
 
 <PageTitle>Wordle Opening Trainer</PageTitle>
+@if (ShowReplayOverlay)
+{
+    <div class="overlay" @onclick="ResetToNewWord"></div>
+}
 <div class="game-container">
     <div class="title_block">
         <div class="game_title">
@@ -11,6 +15,10 @@
         </div>
     </div>
     <div class="game-board">
+        @if (ShowReplayOverlay)
+        {
+            <h2 class="replaytext">Click To Replay</h2>
+        }
         <!-- 6 rows of 5 tiles each -->
         @for (int row = 0; row < 6; row++)
         {
@@ -66,6 +74,7 @@
     © 2025 Saltworks | This site is not approved or endorsed by the New York Times or the Wordle game.
 </div>
 
+
 @code{
     private string[] LetterValues = new string[30]; // 6 rows * 5 letters
     private LetterResponseType[] LetterResponses = new LetterResponseType[30];
@@ -75,6 +84,7 @@
     private string bestGuess = string.Empty;
     private const string firstMove = "plate";
     private bool IsGameComplete { get; set; } = false;
+    private bool ShowReplayOverlay => IsGameComplete;
 
 
     protected override void OnInitialized()
@@ -195,9 +205,7 @@
         else
             DoFailure();
 
-        StateHasChanged();
-        await Task.Delay(3500);
-        ResetToNewWord();
+        await Task.CompletedTask;
 
     }
 

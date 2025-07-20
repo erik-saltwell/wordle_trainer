@@ -109,6 +109,7 @@ body {
     gap: 5px;
     width: 350px;
     height: 420px;
+    position:relative;
 }
 
 .keyboard {
@@ -191,5 +192,41 @@ body {
 
     .game_title .grey {
         color: #787c7e;
+    }
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: blue;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.01);
+    flex-direction:column;
+}
+
+    .replaytext {
+        display:block;
+        color: #fff;
+        background-color: #000;
+        border-radius: 5px;
+        height: 50px;
+        width: 170px;
+        font-family: 'nyt-franklin', 'Helvetica Neue', Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 5px;
+        margin-top: 50px;
+        line-height:50px;
+        position:absolute;
+        z-index:900;
+        top:-75px;
+        left:87px;
     }
 
