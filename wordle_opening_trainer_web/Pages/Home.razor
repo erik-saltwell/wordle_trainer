@@ -12,79 +12,53 @@
     </div>
     <div class="game-board">
         <!-- 6 rows of 5 tiles each -->
-        <LetterBox RowID="0" ColID="0" Result="@LetterResponseType.UNFILLED" Letter="p"/>
-        <LetterBox RowID="0" ColID="1" Result="@LetterResponseType.RIGHT" Letter="l" />
-        <LetterBox RowID="0" ColID="2" Result="@LetterResponseType.WRONG_SPACE" Letter="a" />
-        <LetterBox RowID="0" ColID="3" Result="@LetterResponseType.WRONG_LETTER" Letter="t"/>
-        <LetterBox RowID="0" ColID="4" Result="@LetterResponseType.RIGHT" Letter="e" />
-
-        <LetterBox RowID="1" ColID="0" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="1" ColID="1" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="1" ColID="2" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="1" ColID="3" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="1" ColID="4" Result="@LetterResponseType.UNUSED" />
-
-        <LetterBox RowID="2" ColID="0" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="2" ColID="1" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="2" ColID="2" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="2" ColID="3" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="2" ColID="4" Result="@LetterResponseType.UNUSED" />
-
-        <LetterBox RowID="3" ColID="0" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="3" ColID="1" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="3" ColID="2" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="3" ColID="3" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="3" ColID="4" Result="@LetterResponseType.UNUSED" />
-
-        <LetterBox RowID="4" ColID="0" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="4" ColID="1" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="4" ColID="2" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="4" ColID="3" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="4" ColID="4" Result="@LetterResponseType.UNUSED" />
-
-        <LetterBox RowID="5" ColID="0" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="5" ColID="1" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="5" ColID="2" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="5" ColID="3" Result="@LetterResponseType.UNUSED" />
-        <LetterBox RowID="5" ColID="4" Result="@LetterResponseType.UNUSED" />
+        @for (int row = 0; row < 6; row++)
+        {
+            LetterResponseType initialResponse = (row<2 ? LetterResponseType.UNFILLED : LetterResponseType.UNUSED);
+            for (int col = 0; col < 5; col++)
+            {
+                int index = (row * 5) + col;
+                <LetterBox RowID="@row" ColID="@col" Result="@LetterResponses[index]" Letter="@LetterValues[index]"/>        
+            }            
+        }
     </div>
 
     <div class="keyboard">
-        <div class="keyboard-row">
-            <button id="key_q" class="key letter">Q</button>
-            <button id="key_w" class="key letter">W</button>
-            <button id="key_e" class="key letter">E</button>
-            <button id="key_r" class="key letter">R</button>
-            <button id="key_t" class="key letter">T</button>
-            <button id="key_y" class="key letter">Y</button>
-            <button id="key_u" class="key letter">U</button>
-            <button id="key_i" class="key letter">I</button>
-            <button id="key_o" class="key letter">O</button>
-            <button id="key_p" class="key letter">P</button>
+        <div class="keyboard-row"> 
+            <KeyboardKey Letter="q" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="w" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="e" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="r" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="t" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="y" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="u" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="i" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="o" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="p" OnKeyPressed="HandleKeyInput" />
         </div>
         <div id="key_q" class="keyboard-row">
             <div id="key_q" class="spacer"></div>
-            <button id="key_a" class="key letter">A</button>
-            <button id="key_s" class="key letter">S</button>
-            <button id="key_d" class="key letter">D</button>
-            <button id="key_f" class="key letter">F</button>
-            <button id="key_g" class="key letter">G</button>
-            <button id="key_h" class="key letter">H</button>
-            <button id="key_j" class="key letter">J</button>
-            <button id="key_k" class="key letter">K</button>
-            <button id="key_l" class="key letter">L</button>
+            <KeyboardKey Letter="a" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="s" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="d" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="f" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="g" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="h" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="j" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="k" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="l" OnKeyPressed="HandleKeyInput" />
             <div class="spacer"></div>
         </div>
         <div class="keyboard-row">
-            <button id="key_enter" class="key enter">ENTER</button>
-            <button id="key_z" class="key letter">Z</button>
-            <button id="key_x" class="key letter">X</button>
-            <button id="key_c" class="key letter">C</button>
-            <button id="key_v" class="key letter">V</button>
-            <button id="key_b" class="key letter">B</button>
-            <button id="key_n" class="key letter">N</button>
-            <button id="key_m" class="key letter">M</button>
-            <button id="key_back" class="key backspace">⌫</button>
+            <KeyboardKey Letter="enter" KeyType="KeyboardKeyType.ENTER" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="z" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="x" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="c" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="v" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="b" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="n" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="m" OnKeyPressed="HandleKeyInput" />
+            <KeyboardKey Letter="⌫" KeyType="KeyboardKeyType.BACKSPACE" OnKeyPressed="HandleKeyInput" />
         </div>
     </div>
 </div>
@@ -92,4 +66,139 @@
     © 2025 Saltworks | This site is not approved or endorsed by the New York Times or the Wordle game.
 </div>
 
+@code{
+    private string[] LetterValues = new string[30]; // 6 rows * 5 letters
+    private LetterResponseType[] LetterResponses = new LetterResponseType[30];
+    private int currentIndex = 0;
+    private wordle_trainer_model.PossibleSolutions possibleSolutions = new();
+    private string currentSolution = string.Empty;
+    private string bestGuess = string.Empty;
+    private const string firstMove = "plate";
+
+
+    protected override void OnInitialized()
+    {
+        ResetToNewWord();
+        base.OnInitialized();
+    }
+
+    private void Clear()
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            LetterValues[i] = i < 5 ? firstMove[i].ToString() : " ";
+            LetterResponses[i] = i < 5 ? LetterResponseType.UNFILLED : i < 10 ? LetterResponseType.UNFILLED : LetterResponseType.UNUSED;
+        }
+        currentIndex = 5;
+
+    }
+
+    private void ResetToNewWord()
+    {
+        Clear();
+
+        currentSolution = possibleSolutions.Solutions[System.Random.Shared.Next(possibleSolutions.Solutions.Count)];
+        WordFeedback solutionFeedback = WordFeedback.CreateFromSolution(currentSolution);
+        WordFeedback first_move_result = WordFeedback.CreateFromGuessAndSolution(firstMove, solutionFeedback);
+        foreach (LetterFeedback letterFeedback in first_move_result.Letters)
+        {
+            LetterResponses[letterFeedback.position] = TranslateFeedback(letterFeedback.feedback);
+        }
+        wordle_trainer_model.BestSecondGuesses second_guesses = new();
+        string feedback_string = first_move_result.FeedbackString;
+        if (!second_guesses.Solutions.ContainsKey(feedback_string))
+        {
+            Console.WriteLine($"Solution {currentSolution} feedback string {feedback_string} not found in best_second_guesses");
+            throw new InvalidProgramException();
+        }
+        bestGuess = second_guesses.Solutions[feedback_string];
+        Console.WriteLine($"Solution: {currentSolution}. BestGuess: {bestGuess}.");
+
+    }
+    private LetterResponseType TranslateFeedback(wordle_trainer_model.Feedback feedback)
+    {
+        switch (feedback)
+        {
+            case Feedback.WRONG_LETTER:
+                return LetterResponseType.WRONG_LETTER;
+            case Feedback.WRONG_SPACE:
+                return LetterResponseType.WRONG_SPACE;
+            case Feedback.RIGHT:
+                return LetterResponseType.RIGHT;
+            default:
+                return LetterResponseType.UNSUBMITTED;
+        }
+    }
+
+    private async Task HandleKeyInput(KeyValuePair<KeyboardKeyType, string> key)
+    {
+        if (key.Key == KeyboardKeyType.BACKSPACE)
+        {
+            //Console.WriteLine($"Backspace detected. Current Index is {currentIndex}");
+            if (currentIndex > 5  && currentIndex <= 10) //can't backspace past the start of the row
+            {
+                //Console.WriteLine("Clearing");
+                LetterValues[--currentIndex] = " ";
+            }
+            else
+            {
+                //Console.WriteLine("Wrong position.");
+            }
+        } else if (key.Key == KeyboardKeyType.ENTER)
+        {
+            //Console.WriteLine($"Enter detected. Current Index is {currentIndex}");
+            if (currentIndex == 10) //only allow on end of second row
+            {
+                //Console.WriteLine("At correct position for submit");
+                var rowStart = currentIndex - 5;
+                var guess = string.Join("", LetterValues.Skip(rowStart).Take(5));
+                await SubmitGuessAsync(guess);
+            } else
+            {
+                //Console.WriteLine("Wrong position.");
+            }
+        } else
+        {
+            //Console.WriteLine($"Letter detected. Current Index is {currentIndex}");
+            if (currentIndex > 4 && currentIndex < 10)
+            {
+                //Console.WriteLine($"At correct position for letter. Value: {key.Value[0]}");
+                if (key.Value.Length == 1 && char.IsLetter(key.Value[0]))
+                {
+                    //Console.WriteLine($"Good letter detected, adding.");
+                    LetterValues[currentIndex++] = key.Value.ToUpperInvariant();
+                }
+                else
+                {
+                    //Console.WriteLine("Wrong letter.");
+                }
+            }
+            else
+            {
+                //Console.WriteLine("Wrong position.");
+            }
+        }
+    }
+
+    private Task SubmitGuessAsync(string guess)
+    {
+        // TODO: Call your custom guess evaluation function
+        Console.WriteLine($"User guessed: {guess}. Best Guess: {bestGuess}");
+        if (guess.ToLowerInvariant() == bestGuess.ToLowerInvariant())
+            DoSuccess();
+        else
+            DoFailure();
+
+        return Task.CompletedTask;
+    }
+
+    private void DoSuccess()
+    {
+        Console.WriteLine("Found Success!");
+    }
+    private void DoFailure()
+    {
+        Console.WriteLine("Found Failure!");
+    }
+}
 

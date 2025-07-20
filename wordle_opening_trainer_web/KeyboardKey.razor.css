@@ -1,0 +1,37 @@
+﻿.key {
+    height: 58px;
+    background-color: #d3d6da;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #000000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    transition: background-color 0.1s;
+}
+
+    .key:hover {
+        background-color: #bbbfc4;
+    }
+
+    .key.letter {
+        width: 43px;
+    }
+
+    .key.enter {
+        width: 65px;
+        font-size: 12px;
+    }
+
+    .key.backspace {
+        width: 65px;
+        font-size: 18px;
+    }
+
+.spacer {
+    width: 32px;
+}

@@ -1,5 +1,44 @@
-﻿<h3>KeyboardKey</h3>
-
+﻿<button id="key_q" class="@CssClass" @onclick="NotifyKeyPressed">@Letter.ToUpperInvariant()</button>
 @code {
+    [Parameter] public string Letter { get; set; } = " ";
+    [Parameter] public KeyboardKeyType KeyType { get; set; } = KeyboardKeyType.ALPHANUMERIC;
+
+    [Parameter]
+    public EventCallback<KeyValuePair<KeyboardKeyType,string>> OnKeyPressed { get; set; }
+
+    private async Task NotifyKeyPressed()
+    {
+        await OnKeyPressed.InvokeAsync(new KeyValuePair<KeyboardKeyType,string>(KeyType,Letter));
+    }
+
+    private string ID => "key_" + KeynameForID;
+    private string CssClass => new CssBuilder().Add("key").Add(TypeClassName).ToString();
+    private string KeynameForID
+    {
+        get
+        {
+            switch (KeyType)
+            {
+                case KeyboardKeyType.ENTER:
+                    return "enter";
+                case KeyboardKeyType.BACKSPACE:
+                    return "back";
+                default:
+                    return Letter.ToLowerInvariant();
+            }
+        }
+    }
+    private string TypeClassName{
+        get { 
+            switch (KeyType) { 
+                case KeyboardKeyType.ENTER:
+                    return "enter";
+                case KeyboardKeyType.BACKSPACE:
+                    return "backspace";
+                default:
+                    return "letter";
+            }
+        }
+    }
 
 }
