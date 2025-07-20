@@ -155,15 +155,14 @@ body {
 }
 
 .game_title {
-    font-family: 'nyt-franklin', 'Helvetica Neue', Arial, sans-serif;
-    font-size: 38px;
-    font-weight: 700;
+    font-family: "NYTKarnakCondensed";
+    font-size: 52px;
+    font-weight: 500;
     color: #000000;
     text-align: center;
     margin-bottom: 5px;
     margin-top: 20px;
-    letter-spacing: 0.01em;
-    font-variant: small-caps;
+    letter-spacing: 0.03em;
     width: 100%;
     max-width: 484px;
 }
@@ -174,7 +173,7 @@ body {
     font-weight: 300;
     color: #000000;
     text-align: center;
-    margin-bottom: 5px;
+    margin-bottom: -13px;
     margin-top: 10px;
     letter-spacing: 0.01em;
     font-variant: small-caps;
