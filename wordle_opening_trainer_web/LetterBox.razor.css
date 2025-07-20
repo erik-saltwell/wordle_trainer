@@ -15,21 +15,21 @@
     .tile.right {
         --background-color: #6aaa64;
         --border-color: #6aaa64;
-        color: #ffffff;
-        animation:flip 0.5s ease forwards;
+        border-color: #565758;
+        animation: flip 0.5s ease forwards;
     }
 
     .tile.wrong_space {
         --background-color: #c9b458;
         --border-color: #c9b458;
-        color: #ffffff;
+        border-color:#565758;
         animation: flip 0.5s ease forwards;
     }
 
     .tile.wrong_letter {
         --background-color: #787c7e;
         --border-color: #787c7e;
-        color: #ffffff;
+        border-color: #565758;
         animation: flip 0.5s ease forwards;
     }
 
@@ -43,13 +43,31 @@
         background-color:#f5f5f5;
     }
 
+    .tile.copmlete.firstcolumn{
+        animation-delay:0s;
+    }
+    .tile.complete.secondcolumn {
+        animation-delay: 0.2s;
+    }
+    .tile.complete.thirdcolumn {
+        animation-delay: 0.4s;
+    }
+    .tile.complete.fourthcolumn {
+        animation-delay: 0.6s;
+    }
+    .tile.complete.fifthcolumn {
+        animation-delay: 0.8s;
+    }
+
 @keyframes bloom {
     0% {
-        transform: scale(1);
+        transform: scale(0.8);
+        opacity:0;
         
     }
     50% {
-        transform: scale(1.2);
+        transform: scale(1.1);
+        opacity: 1;
     }
 
     100% {
@@ -62,12 +80,14 @@
         0% {
             transform: rotateX(0);
             background-color: #fff;
-            border-color: #d3d6da;
+            border-color: #565758;
+            color: #000;
         }
         45% {
             transform: rotateX(90deg);
             background-color: #fff;
-            border-color: #d3d6da;
+            border-color: #565758;
+            color: #000;
         }
         55% {
             transform: rotateX(90deg);

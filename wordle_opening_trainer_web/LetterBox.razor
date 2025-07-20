@@ -4,12 +4,31 @@
     [Parameter] public int RowID { get; set; } = 0;
     [Parameter] public string Letter { get; set; } = "";
     [Parameter] public LetterResponseType Result { get; set; } = LetterResponseType.UNFILLED;
-
+    [Parameter] public bool IsComplete { get; set; } = false;
     private string CellID => "cell_" + RowID.ToString() + "_" + ColID;
 
-    private string CssClass => new CssBuilder().Add("tile").Add(result_classname).ToString();
+    private string CssClass => new CssBuilder().Add("tile").Add(ColumnClassname).Add(ResultClassname).Add(CompletionClassname).ToString();
 
-    private string result_classname
+    private string CompletionClassname => IsComplete ? "complete" : "in_progress";
+
+    private string ColumnClassname 
+    { 
+        get
+        {
+            if (!IsComplete) return "";
+            switch (ColID)
+            {
+                case 0: return "firstcolumn";
+                case 1: return "secondcolumn";
+                case 2: return "thirdcolumn";
+                case 3: return "fourthcolumn";
+                case 4: return "fifthcolumn";
+                default: return "nocolumn";
+            }
+        } 
+    }
+
+    private string ResultClassname
     {
         get
         {

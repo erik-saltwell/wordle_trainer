@@ -18,7 +18,7 @@
             for (int col = 0; col < 5; col++)
             {
                 int index = (row * 5) + col;
-                <LetterBox RowID="@row" ColID="@col" Result="@LetterResponses[index]" Letter="@LetterValues[index]"/>        
+                <LetterBox RowID="@row" ColID="@col" Result="@LetterResponses[index]" Letter="@LetterValues[index]" IsComplete="@IsGameComplete"/>        
             }            
         }
     </div>
@@ -74,6 +74,7 @@
     private string currentSolution = string.Empty;
     private string bestGuess = string.Empty;
     private const string firstMove = "plate";
+    private bool IsGameComplete { get; set; } = false;
 
 
     protected override void OnInitialized()
@@ -90,7 +91,7 @@
             LetterResponses[i] = i < 5 ? LetterResponseType.UNFILLED : i < 10 ? LetterResponseType.UNFILLED : LetterResponseType.UNUSED;
         }
         currentIndex = 5;
-
+        IsGameComplete = false;
     }
 
     private void ResetToNewWord()
@@ -188,6 +189,7 @@
     {
         // TODO: Call your custom guess evaluation function
         Console.WriteLine($"User guessed: {guess}. Best Guess: {bestGuess}");
+        IsGameComplete = true;
         if (guess.ToLowerInvariant() == bestGuess.ToLowerInvariant())
             DoSuccess();
         else
@@ -199,10 +201,18 @@
     private void DoSuccess()
     {
         Console.WriteLine("Found Success!");
+        for (int i = 5; i < 10; i++)
+        {
+            LetterResponses[i] = LetterResponseType.RIGHT;
+        }
     }
     private void DoFailure()
     {
         Console.WriteLine("Found Failure!");
+        for (int i = 5; i < 10; i++)
+        {
+            LetterResponses[i] = LetterResponseType.WRONG_SPACE;
+        }
     }
 }
 
