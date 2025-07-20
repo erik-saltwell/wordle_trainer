@@ -138,7 +138,9 @@
             if (currentIndex > 5  && currentIndex <= 10) //can't backspace past the start of the row
             {
                 //Console.WriteLine("Clearing");
-                LetterValues[--currentIndex] = " ";
+                currentIndex = currentIndex - 1;
+                LetterValues[currentIndex] = " ";
+                LetterResponses[currentIndex] = LetterResponseType.UNFILLED;
             }
             else
             {
@@ -166,7 +168,9 @@
                 if (key.Value.Length == 1 && char.IsLetter(key.Value[0]))
                 {
                     //Console.WriteLine($"Good letter detected, adding.");
-                    LetterValues[currentIndex++] = key.Value.ToUpperInvariant();
+                    LetterValues[currentIndex] = key.Value.ToUpperInvariant();
+                    LetterResponses[currentIndex] = LetterResponseType.UNSUBMITTED;
+                    currentIndex = currentIndex + 1;
                 }
                 else
                 {
