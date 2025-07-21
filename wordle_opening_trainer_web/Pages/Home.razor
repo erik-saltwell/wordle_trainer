@@ -6,14 +6,12 @@
     <div class="overlay" @onclick="ResetToNewWord"></div>
 }
 <div class="game-container">
-    <div class="title_block">
         <div class="game_title">
             Wor<span class="green">d</span><span class="yellow">o</span><span class="green">j</span><span class="yellow">o</span>
         </div>
         <div class="game_subtitle">
             Wordle Opening Trainer
         </div>
-    </div>
     <div class="game-board">
         @if (ShowReplayOverlay)
         {
@@ -70,9 +68,7 @@
         </div>
     </div>
 </div>
-<div class="footer">
-    © 2025 Saltworks | This site is not approved or endorsed by the New York Times or the Wordle game.
-</div>
+
 
 
 @code{
