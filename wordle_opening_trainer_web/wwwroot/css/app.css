@@ -237,6 +237,8 @@ body {
     #app{
         justify-content:flex-start;
         padding:5px;
+        padding-left:10px;
+        padding-right:10px;
     }
     .game_title {
         margin-bottom:0px;
