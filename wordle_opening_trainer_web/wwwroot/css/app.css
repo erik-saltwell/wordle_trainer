@@ -229,14 +229,20 @@ body {
     }
 
 
-@media (max-height: 830px) {
+@media (max-height: 999px) {
     .footer{
         display:none;
+        justify-content:flex-start;
     }
-}
+    #app{
+        justify-content:flex-start;
+        padding:5px;
+    }
+    .game_title {
+        margin-bottom:0px;
+    }
+    .game_subtitle {
+        margin-bottom: 5px;
+    }
 
-@media (max-height: 850px) {
-    #app {
-        justify-content: flex-start;
-    }
 }
