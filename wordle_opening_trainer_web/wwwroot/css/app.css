@@ -228,3 +228,15 @@ body {
         left:87px;
     }
 
+
+@media (max-height: 830px) {
+    .footer{
+        display:none;
+    }
+}
+
+@media (max-height: 850px) {
+    #app {
+        justify-content: flex-start;
+    }
+}
